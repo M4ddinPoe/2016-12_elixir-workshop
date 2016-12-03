@@ -18,6 +18,7 @@ defmodule Wiki.Router do
 
     get "/", PageController, :index
     get "/:id", PageController, :show
+    get "/:id/edit", PageController, :edit
   end
 
   # Other scopes may use custom stacks.
