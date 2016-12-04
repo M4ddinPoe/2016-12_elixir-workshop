@@ -16,11 +16,11 @@
       <td><%= comment.page_id %></td>
 
       <td class="text-right">
-        <%= link "Delete", to: comment_path(@conn, :delete, comment), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+        <%= link "Delete", to: page_comment_path(@conn, :delete, @page, comment), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
       </td>
     </tr>
 <% end %>
   </tbody>
 </table>
 
-<%= link "New comment", to: comment_path(@conn, :new) %>
+<%= link "New comment", to: page_comment_path(@conn, :new, @page) %>
