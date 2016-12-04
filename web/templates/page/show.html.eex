@@ -14,5 +14,7 @@
 
 </ul>
 
+<%= render Wiki.CommentView, "index.html", conn: @conn, page: @page, comments: @page.comments %>
+
 <%= link "Edit", to: page_path(@conn, :edit, @page) %>
 <%= link "Back", to: page_path(@conn, :index) %>

@@ -5,7 +5,7 @@ defmodule Wiki.CommentController do
 
   def index(conn, _params) do
     page = load_page(conn)
-    comments = Repo.all(Comment)
+    comments = Repo.all(assoc(page, :comments))
     render(conn, "index.html", comments: comments, page: page)
   end
 
@@ -17,13 +17,15 @@ defmodule Wiki.CommentController do
 
   def create(conn, %{"comment" => comment_params}) do
     page = load_page(conn)
-    changeset = Comment.changeset(%Comment{}, comment_params)
+    changeset = 
+      %Comment{page_id: page.id}
+      |> Comment.changeset(comment_params)
 
     case Repo.insert(changeset) do
       {:ok, _comment} ->
         conn
         |> put_flash(:info, "Comment created successfully.")
-        |> redirect(to: page_comment_path(conn, :index, page))
+        |> redirect(to: page_path(conn, :show, page))
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset,page: page)
     end
@@ -31,7 +33,7 @@ defmodule Wiki.CommentController do
 
   def delete(conn, %{"id" => id}) do
     page = load_page(conn)
-    comment = Repo.get!(Comment, id)
+    comment = Repo.get!(assoc(page, :comments), id)
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
@@ -39,7 +41,7 @@ defmodule Wiki.CommentController do
 
     conn
     |> put_flash(:info, "Comment deleted successfully.")
-    |> redirect(to: page_comment_path(conn, :index, page))
+    |> redirect(to: page_path(conn, :show, page))
   end
 
   defp load_page(conn) do
