@@ -1,6 +1,7 @@
 defmodule Wiki.Page do
   use Wiki.Web, :model
 
+  @derive {Phoenix.Param, key: :title}
   schema "pages" do
     field :title, :string
     field :body, :string

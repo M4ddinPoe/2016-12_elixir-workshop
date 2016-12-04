@@ -1,45 +1,65 @@
 defmodule Wiki.PageController do
-  use Wiki.Web, :controller 
-  
+  use Wiki.Web, :controller
+
+  alias Wiki.Page
+
   def index(conn, _params) do
+    pages = Repo.all(Page)
+    render(conn, "index.html", pages: pages)
+  end
 
-    pages = Repo.all(Wiki.Page)
+  def new(conn, _params) do
+    changeset = Page.changeset(%Page{})
+    render(conn, "new.html", changeset: changeset)
+  end
 
-    render conn, "index.html", pages: pages
+  def create(conn, %{"page" => page_params}) do
+    changeset = Page.changeset(%Page{}, page_params)
+
+    case Repo.insert(changeset) do
+      {:ok, _page} ->
+        conn
+        |> put_flash(:info, "Page created successfully.")
+        |> redirect(to: page_path(conn, :index))
+      {:error, changeset} ->
+        render(conn, "new.html", changeset: changeset)
+    end
   end
 
   def show(conn, %{"id" => id}) do
-
-    page = Repo.get_by!(Wiki.Page, title: id)
-    render conn, "show.html", page: page
+    page = Repo.get_by!(Page, title: id)
+    render(conn, "show.html", page: page)
   end
 
   def edit(conn, %{"id" => id}) do
-
-    page = Repo.get_by!(Wiki.Page, title: id)
-
-    changeset = Wiki.Page.changeset(page)
-
-    render conn, "edit.html", page: page, changeset: changeset
+    page = Repo.get_by!(Page, title: id)
+    changeset = Page.changeset(page)
+    render(conn, "edit.html", page: page, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "page" => page_params}) do
-    page = Repo.get_by!(Wiki.Page, title: id)
-
-    changeset = Wiki.Page.changeset(page, page_params)
+    page = Repo.get_by!(Page, title: id)
+    changeset = Page.changeset(page, page_params)
 
     case Repo.update(changeset) do
-      {:ok, updated_page} ->
-        redirect conn, to: page_path(conn, :show, updated_page.title)
+      {:ok, page} ->
+        conn
+        |> put_flash(:info, "Page updated successfully.")
+        |> redirect(to: page_path(conn, :show, page))
       {:error, changeset} ->
-        render conn, "edit.html", page: page, changeset: changeset
+        render(conn, "edit.html", page: page, changeset: changeset)
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    page = Repo.get_by!(Wiki.Page, title: id)
-  
+    page = Repo.get_by!(Page, title: id)
+
+    # Here we use delete! (with a bang) because we expect
+    # it to always work (and if it does not, it will raise).
     Repo.delete!(page)
-    redirect conn, to: page_path(conn, :index)
+
+    conn
+    |> put_flash(:info, "Page deleted successfully.")
+    |> redirect(to: page_path(conn, :index))
   end
 end
