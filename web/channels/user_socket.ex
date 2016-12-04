@@ -3,6 +3,7 @@ defmodule Wiki.UserSocket do
 
   ## Channels
   # channel "room:*", Wiki.RoomChannel
+  channel "page:*", Wiki.PageChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

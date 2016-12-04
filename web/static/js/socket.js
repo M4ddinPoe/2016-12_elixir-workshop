@@ -53,10 +53,19 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 
 socket.connect()
 
-// Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {})
-channel.join()
-  .receive("ok", resp => { console.log("Joined successfully", resp) })
-  .receive("error", resp => { console.log("Unable to join", resp) })
+let element = document.querySelectorAll("[data-page-id]")[0]
+
+if (element) {
+  let pageId = element.getAttribute("data-page-id")
+  let pageChannel = socket.channel(`page:${pageId}`, {})
+
+  pageChannel.join()
+    .receive("ok", resp => { console.log("Joined successfully", resp) })
+    .receive("error", resp => { console.log("Unable to join", resp) })
+
+  pageChannel.on("new_comment", () => {
+    location.reload()
+  });
+}
 
 export default socket

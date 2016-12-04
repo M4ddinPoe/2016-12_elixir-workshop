@@ -23,6 +23,8 @@ defmodule Wiki.CommentController do
 
     case Repo.insert(changeset) do
       {:ok, _comment} ->
+        Wiki.Endpoint.broadcast! "page:#{page.id}", "new_comment", %{}
+
         conn
         |> put_flash(:info, "Comment created successfully.")
         |> redirect(to: page_path(conn, :show, page))
@@ -38,6 +40,8 @@ defmodule Wiki.CommentController do
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
     Repo.delete!(comment)
+
+    Wiki.Endpoint.broadcast! "page:#{page.id}", "new_comment", %{}
 
     conn
     |> put_flash(:info, "Comment deleted successfully.")
