@@ -5,6 +5,7 @@ defmodule Wiki.Page do
   schema "pages" do
     field :title, :string
     field :body, :string
+    has_many :comments, Wiki.Comment, on_delete: :delete_all
 
     timestamps()
   end

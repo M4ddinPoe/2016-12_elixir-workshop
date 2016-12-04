@@ -16,6 +16,7 @@ defmodule Wiki.Router do
   scope "/", Wiki do
     pipe_through :browser # Use the default browser stack
 
+    resources "/comments", CommentController, except: [:show, :edit, :update]
     resources "/", PageController
     #get "/", PageController, :index
     #get "/:id", PageController, :show
