@@ -9,7 +9,7 @@
 
   <li>
     <strong>Body:</strong>
-    <%= text_to_html(@page.body) %> 
+    <%= wiki_to_html(@page.body) %> 
   </li>
 
 </ul>
