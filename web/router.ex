@@ -7,6 +7,7 @@ defmodule Wiki.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Wiki.AuthenticationPlug
   end
 
   pipeline :api do
@@ -16,6 +17,9 @@ defmodule Wiki.Router do
   scope "/", Wiki do
     pipe_through :browser # Use the default browser stack
 
+    get "/login", SessionController, :new
+    post "/login", SessionController, :create
+    post "/logout", SessionController, :delete
     resources "/users", UserController
     resources "/", PageController do
       resources "/comments", CommentController, except: [:show, :edit, :update]

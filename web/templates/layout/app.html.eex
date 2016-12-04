@@ -25,6 +25,12 @@
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
 
+      <%= if @conn.assigns.current_user do %>
+        <%= link "Logout", to: session_path(@conn, :delete), method: :post %>
+      <% else %>
+        <%= link "Login", to: session_path(@conn, :new) %>
+      <% end %>
+
       <main role="main">
         <%= render @view_module, @view_template, assigns %>
       </main>

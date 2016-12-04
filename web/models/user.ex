@@ -26,6 +26,10 @@ defmodule Wiki.User do
     |> encrypt_password()
   end
 
+  def valid_password?(%__MODULE__{encrypted_password: encrypted_password}, input_password) do
+    encrypted_password == hashed_password(input_password)
+  end
+
   defp encrypt_password(%Ecto.Changeset{} = changeset) do
     string = hashed_password(changeset.params["password"])
     put_change(changeset, :encrypted_password, string)
