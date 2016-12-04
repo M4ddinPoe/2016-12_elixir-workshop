@@ -23,7 +23,7 @@ defmodule Wiki.CommentController do
 
     case Repo.insert(changeset) do
       {:ok, _comment} ->
-        Wiki.Endpoint.broadcast! "page:#{page.id}", "new_comment", %{}
+        Wiki.Endpoint.broadcast! "page:#{page.id}", "comment_changed", %{}
 
         conn
         |> put_flash(:info, "Comment created successfully.")
@@ -41,7 +41,7 @@ defmodule Wiki.CommentController do
     # it to always work (and if it does not, it will raise).
     Repo.delete!(comment)
 
-    Wiki.Endpoint.broadcast! "page:#{page.id}", "new_comment", %{}
+    Wiki.Endpoint.broadcast! "page:#{page.id}", "comment_changed", %{}
 
     conn
     |> put_flash(:info, "Comment deleted successfully.")

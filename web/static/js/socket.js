@@ -63,7 +63,7 @@ if (element) {
     .receive("ok", resp => { console.log("Joined successfully", resp) })
     .receive("error", resp => { console.log("Unable to join", resp) })
 
-  pageChannel.on("new_comment", () => {
+  pageChannel.on("comment_changed", () => {
     location.reload()
   });
 }
